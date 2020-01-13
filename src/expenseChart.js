@@ -1,30 +1,17 @@
 const Chart = require("chart.js");
 import { useIndexedDb } from "./indexedDb";
 
-const ctx = document.getElementById("myChart").getContext("2d");
-export const expensesChart = new Chart(ctx, {
-  type: "bar",
+const ctx = document.getElementById("balChart");
+export const expenseChart = new Chart(ctx, {
+  type: "line",
   data: {
     labels: [],
     datasets: [
       {
         label: "Expense cost in $",
         data: [],
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)"
-        ],
         borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)"
+          "rgba(255, 99, 132, 1)"
         ],
         borderWidth: 1
       }
@@ -32,7 +19,7 @@ export const expensesChart = new Chart(ctx, {
   },
   options: {
     title: {
-      text: "Expenses Chart"
+      text: "Balance Chart"
     },
     scales: {
       yAxes: [
@@ -46,13 +33,14 @@ export const expensesChart = new Chart(ctx, {
   }
 });
 
-export function updateChart(expenseChart, name, price) {
+export function updateChart(expenseChart, name, balance) {
   expenseChart.data.labels.push(name);
   expenseChart.data.datasets.forEach(dataset => {
-    dataset.data.push(price);
+    console.log(dataset);
+    dataset.data.push(balance);
   });
   expenseChart.update();
-}
+};
 
 export function resetChart(expenseChart) {
   expenseChart.data.labels = [];
@@ -60,10 +48,13 @@ export function resetChart(expenseChart) {
     dataset.data = [];
   });
   expenseChart.update();
-}
+};
 
 useIndexedDb("expense", "expenseStore", "get").then(results => {
+  console.log(results);
   results.forEach(expense => {
-    updateChart(expensesChart, expense.name, expense.value);
+    updateChart(expenseChart, expense.name, expense.balance);
   });
 });
+
+useIndexedDb();

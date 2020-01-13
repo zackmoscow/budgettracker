@@ -4,7 +4,7 @@ const config = {
     chart: "./src/expenseChart.js"
   },
   output: {
-    path: __dirname + "/dist",
+    path: __dirname + "/public/",
     filename: "[name].bundle.js"
   },
   mode: "development",
